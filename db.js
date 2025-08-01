@@ -47,7 +47,7 @@ async function getEmployees() {
   return result.map(emp => ({
     id: emp.id,
     name: emp.full_name,
-    is_present: false, // можно дополнить позже Mode'ом, если нужно оба направления
+    is_present: true, // можно дополнить позже Mode'ом, если нужно оба направления
     time: emp.last_time
   }));
 }
