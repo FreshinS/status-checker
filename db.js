@@ -5,7 +5,7 @@ let pool;
 
 async function getConnection() {
   if (!pool) {
-    pool = await odbc.connect(`DSN=MSSQL_Test;UID=${process.env.MSSQL_USER};PWD=${process.env.MSSQL_PASS};DATABASE=OrionNavigat`);
+    pool = await odbc.connect(`DSN=MSSQL_Test;UID=${process.env.MSSQL_USER};PWD=${process.env.MSSQL_PASS}`);
     console.log('connected!')
   }
   return pool;
