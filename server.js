@@ -44,7 +44,7 @@ async function pollAndBroadcast() {
       });
     }
   } catch (err) {
-    console.error('Ошибка при опросе БД:', err.message);
+    console.error('Ошибка при опросе БД:', err);
   }
 }
 
