@@ -39,7 +39,7 @@ async function pollAndBroadcast() {
 
       console.log(changed);
       id += 1;
-      fs.writeFileSync(`change-${id}.txt`, JSON.stringify(changed), 'utf8')
+      fs.writeFileSync(`change-${id}.txt`, JSON.stringify(changed, null, 2), 'utf8')
 
       console.log(changed.find((emp) => emp.name.includes('Громов') || emp.name === 'Громов Илья Николаевич'))
 
