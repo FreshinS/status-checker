@@ -14,28 +14,36 @@ async function getConnection() {
 async function getEmployees() {
   const conn = await getConnection();
   const query = `
+    WITH LatestEvents AS (
+      SELECT
+        plog.HozOrgan AS id,
+        employees.TabNumber AS tab_number,
+        employees.Name + ' ' + employees.FirstName + ' ' + employees.MidName AS full_name,
+        plog.TimeVal AS last_time,
+        plog.Mode AS mode,
+        ROW_NUMBER() OVER (PARTITION BY plog.HozOrgan ORDER BY plog.TimeVal DESC) AS rn
+      FROM
+        [ORIONSERVER\\SQLSERVER2012].[OrionNavigat].[dbo].[PLogData] AS plog
+      LEFT JOIN
+        [ORIONSERVER\\SQLSERVER2012].[OrionNavigat].[dbo].[PList] AS employees
+        ON plog.HozOrgan = employees.ID
+      WHERE
+        plog.doorIndex IN (1, 2, 10, 14, 16, 18, 19, 20, 30, 31, 32, 34, 35, 36, 42, 45, 48, 49, 52)
+        AND plog.TimeVal > CAST(GETDATE() AS date)
+        AND plog.HozOrgan <> 0 AND employees.TabNumber <> ''
+        AND employees.Section <> 62
+        AND plog.Event = 32
+    )
     SELECT
-      plog.HozOrgan AS id,
-      employees.TabNumber AS tab_number,
-      employees.Name + ' ' + employees.FirstName + ' ' + employees.MidName AS full_name,
-      MAX(plog.TimeVal) AS last_time,
-      plog.Mode AS mode
+      id,
+      tab_number,
+      full_name,
+      last_time,
+      mode
     FROM
-      [ORIONSERVER\\SQLSERVER2012].[OrionNavigat].[dbo].[PLogData] AS plog
-    LEFT JOIN
-      [ORIONSERVER\\SQLSERVER2012].[OrionNavigat].[dbo].[PList] AS employees
-      ON plog.HozOrgan = employees.ID
+      LatestEvents
     WHERE
-      plog.doorIndex IN (1, 2, 10, 14, 16, 18, 19, 20, 30, 31, 32, 34, 35, 36, 42, 45, 48, 49, 52)
-      AND plog.TimeVal > CAST(GETDATE() AS date)
-      AND plog.HozOrgan <> 0 AND employees.TabNumber <> ''
-      AND employees.Section <> 62
-      AND plog.Mode = 0 AND plog.Event = 32
-    GROUP BY
-      employees.TabNumber,
-      plog.HozOrgan,
-      employees.Name + ' ' + employees.FirstName + ' ' + employees.MidName,
-      plog.Mode
+      rn = 1
   `;
 
   const result = await conn.query(query);
@@ -48,7 +56,7 @@ async function getEmployees() {
     id: emp.id,
     tab_number: emp.tab_number,
     name: emp.full_name,
-    is_present: true, // можно дополнить позже Mode'ом, если нужно оба направления
+    is_present: emp.mode === 1, // 1 = вход, 2 = выход
     time: emp.last_time,
     mode: emp.mode
   }));
