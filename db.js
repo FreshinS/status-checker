@@ -24,11 +24,9 @@ async function getConnection() {
 }
 
 async function getEmployees() {
-  const pool = await getConnection();
-  const result = await pool.request().query(`
-    SELECT id, name, is_present FROM Employees
-  `);
-  return result.recordset;
+  const conn = await getConnection();
+  const result = await conn.query(`SELECT id, name, is_present FROM Employees`);
+  return result;
 }
 
 module.exports = { getEmployees };
