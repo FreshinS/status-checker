@@ -30,7 +30,7 @@ async function getEmployees() {
       AND plog.TimeVal > CAST(GETDATE() AS date)
       AND plog.HozOrgan <> 0 AND employees.TabNumber <> ''
       AND employees.Section <> 62
-      AND plog.Mode = 2 AND plog.Event = 32
+      AND plog.Mode = 1 AND plog.Event = 32
     GROUP BY
       employees.TabNumber,
       plog.HozOrgan,
@@ -39,6 +39,8 @@ async function getEmployees() {
   `;
 
   const result = await conn.query(query);
+
+  return result
 
   // Формируем структуру с is_present = true (так как Mode=1 в WHERE)
   return result.map(emp => ({
