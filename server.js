@@ -32,7 +32,7 @@ async function pollAndBroadcast() {
     if (changed.length > 0) {
       console.log(`Обнаружено ${changed.length} изменений. Рассылаем.`);
 
-      console.log(changed);
+    //   console.log(changed);
 
     //   const payload = JSON.stringify({
     //     type: 'status_update',
