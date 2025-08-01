@@ -34,7 +34,7 @@ async function pollAndBroadcast() {
 
       console.log(changed);
 
-      console.log(changed.find((emp) => emp.name.includes('Громов')))
+      console.log(changed.find((emp) => emp.name.includes('Громов') || emp.name === 'Громов Илья Николаевич'))
 
     //   const payload = JSON.stringify({
     //     type: 'status_update',

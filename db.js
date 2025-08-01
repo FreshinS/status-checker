@@ -40,7 +40,7 @@ async function getEmployees() {
 
   const result = await conn.query(query);
 
-  console.log(result);
+  // console.log(result);
   // return result
 
   // Формируем структуру с is_present = true (так как Mode=1 в WHERE)
