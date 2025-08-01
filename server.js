@@ -22,8 +22,11 @@ async function pollAndBroadcast() {
       if (prev === undefined || prev !== emp.is_present) {
         changed.push({
           id: emp.id,
+          tab_number: emp.tab_number,
           name: emp.name,
-          is_present: emp.is_present
+          is_present: emp.is_present,
+          time: emp.time,
+          mode: emp.mode
         });
       }
       previousStatus.set(emp.id, emp.is_present); // обновляем
