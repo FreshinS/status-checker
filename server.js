@@ -32,16 +32,18 @@ async function pollAndBroadcast() {
     if (changed.length > 0) {
       console.log(`Обнаружено ${changed.length} изменений. Рассылаем.`);
 
-      const payload = JSON.stringify({
-        type: 'status_update',
-        data: changed
-      });
+      console.log(changed);
 
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(payload);
-        }
-      });
+    //   const payload = JSON.stringify({
+    //     type: 'status_update',
+    //     data: changed
+    //   });
+
+    //   wss.clients.forEach((client) => {
+    //     if (client.readyState === WebSocket.OPEN) {
+    //       client.send(payload);
+    //     }
+    //   });
     }
   } catch (err) {
     console.error('Ошибка при опросе БД:', err);
