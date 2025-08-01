@@ -30,7 +30,7 @@ async function getEmployees() {
       AND plog.TimeVal > CAST(GETDATE() AS date)
       AND plog.HozOrgan <> 0 AND employees.TabNumber <> ''
       AND employees.Section <> 62
-      AND plog.Mode = 1 AND plog.Event = 32
+      AND plog.Mode = 2 AND plog.Event = 32
     GROUP BY
       employees.TabNumber,
       plog.HozOrgan,
@@ -44,7 +44,7 @@ async function getEmployees() {
   return result.map(emp => ({
     id: emp.id,
     name: emp.full_name,
-    is_present: true, // можно дополнить позже Mode'ом, если нужно оба направления
+    is_present: false, // можно дополнить позже Mode'ом, если нужно оба направления
     time: emp.last_time
   }));
 }
