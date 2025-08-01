@@ -5,7 +5,7 @@ let pool;
 
 async function getConnection() {
   if (!pool) {
-    pool = await odbc.connect(`DSN=MSSQL_Test;UID=${process.env.MSSQL_USER};PWD=${process.env.MSSQL_PASS}`);
+    pool = await odbc.connect(`DSN=MSSQL_Test;UID=${process.env.MSSQL_USER};PWD=${process.env.MSSQL_PASS};DATABASE=OrionNavigat`);
     console.log('connected!')
   }
   return pool;
@@ -13,7 +13,7 @@ async function getConnection() {
 
 async function getEmployees() {
   const conn = await getConnection();
-  const result = await conn.query(`SELECT TOP 1 * FROM OrionNavigat.dbo.PList`);
+  const result = await conn.query(`SELECT TOP 1 * FROM dbo.PList`);
   console.log(result);
 //   const result = await conn.query(`
 //     SELECT
