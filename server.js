@@ -1,7 +1,6 @@
 require('dotenv').config();
 const WebSocket = require('ws');
 const { getEmployees } = require('./db');
-const fs = require('fs')
 
 const wss = new WebSocket.Server({ port: process.env.PORT || 3000 });
 console.log(`WebSocket сервер запущен на порту ${process.env.PORT}`);
@@ -33,26 +32,23 @@ async function pollAndBroadcast() {
       previousStatus.set(emp.id, emp.is_present); // обновляем
     }
 
-    let id = 0;
     if (changed.length > 0) {
       console.log(`Обнаружено ${changed.length} изменений. Рассылаем.`);
 
       console.log(changed);
-      id += 1;
-      fs.writeFileSync(`change-${id}.txt`, JSON.stringify(changed, null, 2), 'utf8')
 
-      console.log(changed.find((emp) => emp.name.includes('Громов') || emp.name === 'Громов Илья Николаевич'))
+      // рассылка
 
-    //   const payload = JSON.stringify({
-    //     type: 'status_update',
-    //     data: changed
-    //   });
+      // const payload = JSON.stringify({
+      //   type: 'status_update',
+      //   data: changed
+      // });
 
-    //   wss.clients.forEach((client) => {
-    //     if (client.readyState === WebSocket.OPEN) {
-    //       client.send(payload);
-    //     }
-    //   });
+      // wss.clients.forEach((client) => {
+      //   if (client.readyState === WebSocket.OPEN) {
+      //     client.send(payload);
+      //   }
+      // });
     }
   } catch (err) {
     console.error('Ошибка при опросе БД:', err);

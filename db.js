@@ -48,15 +48,11 @@ async function getEmployees() {
 
   const result = await conn.query(query);
 
-  // console.log(result);
-  // return result
-
-  // Формируем структуру с is_present = true (так как Mode=1 в WHERE)
   return result.map(emp => ({
     id: emp.id,
     tab_number: emp.tab_number,
     name: emp.full_name,
-    is_present: emp.mode === 1, // 1 = вход, 2 = выход
+    is_present: emp.mode === 1,
     time: emp.last_time,
     mode: emp.mode
   }));
