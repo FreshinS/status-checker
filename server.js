@@ -50,4 +50,6 @@ async function pollAndBroadcast() {
   }
 }
 
-setInterval(pollAndBroadcast, parseInt(process.env.POLL_INTERVAL_MS));
+// setInterval(pollAndBroadcast, parseInt(process.env.POLL_INTERVAL_MS));
+
+setInterval(pollAndBroadcast, 30000);
