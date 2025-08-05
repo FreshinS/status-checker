@@ -84,7 +84,7 @@ async function getEmployees() {
     const [last, prev] = events;
 
     const is_present =
-      !prev || new Date(last.time) > new Date(prev.time)
+      !prev || new Date(last.last_time) > new Date(prev.last_time)
         ? last.mode === 1
         : prev.mode === 1;
 
@@ -93,7 +93,7 @@ async function getEmployees() {
       tab_number: last.tab_number,
       name: last.full_name,
       is_present,
-      time: last.time,
+      time: last.last_time,
       mode: last.mode,
     };
   });
