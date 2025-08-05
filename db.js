@@ -14,40 +14,67 @@ async function getConnection() {
 
 async function getEmployees() {
   const conn = await getConnection();
+  // const query = `
+  //   WITH LatestEvents AS (
+  //     SELECT
+  //       plog.HozOrgan AS id,
+  //       employees.TabNumber AS tab_number,
+  //       employees.Name + ' ' + employees.FirstName + ' ' + employees.MidName AS full_name,
+  //       plog.TimeVal AS last_time,
+  //       plog.Mode AS mode,
+  //       ROW_NUMBER() OVER (PARTITION BY plog.HozOrgan ORDER BY plog.TimeVal DESC) AS rn
+  //     FROM
+  //       [ORIONSERVER\\SQLSERVER2012].[OrionNavigat].[dbo].[PLogData] AS plog
+  //     LEFT JOIN
+  //       [ORIONSERVER\\SQLSERVER2012].[OrionNavigat].[dbo].[PList] AS employees
+  //       ON plog.HozOrgan = employees.ID
+  //     WHERE
+  //       plog.doorIndex IN (1, 2, 10, 14, 16, 18, 19, 20, 30, 31, 32, 34, 35, 36, 42, 45, 48, 49, 52)
+  //       AND plog.TimeVal > CAST(GETDATE() AS date)
+  //       AND plog.HozOrgan <> 0 AND employees.TabNumber <> ''
+  //       AND employees.Section <> 62
+  //       AND plog.Event = 32
+  //   )
+  //   SELECT
+  //     id,
+  //     tab_number,
+  //     full_name,
+  //     last_time,
+  //     mode
+  //   FROM
+  //     LatestEvents
+  //   WHERE
+  //     rn = 1
+  // `;
+
   const query = `
-    WITH LatestEvents AS (
-      SELECT
-        plog.HozOrgan AS id,
-        employees.TabNumber AS tab_number,
-        employees.Name + ' ' + employees.FirstName + ' ' + employees.MidName AS full_name,
-        plog.TimeVal AS last_time,
-        plog.Mode AS mode,
-        ROW_NUMBER() OVER (PARTITION BY plog.HozOrgan ORDER BY plog.TimeVal DESC) AS rn
-      FROM
-        [ORIONSERVER\\SQLSERVER2012].[OrionNavigat].[dbo].[PLogData] AS plog
-      LEFT JOIN
-        [ORIONSERVER\\SQLSERVER2012].[OrionNavigat].[dbo].[PList] AS employees
-        ON plog.HozOrgan = employees.ID
-      WHERE
-        plog.doorIndex IN (1, 2, 10, 14, 16, 18, 19, 20, 30, 31, 32, 34, 35, 36, 42, 45, 48, 49, 52)
-        AND plog.TimeVal > CAST(GETDATE() AS date)
-        AND plog.HozOrgan <> 0 AND employees.TabNumber <> ''
-        AND employees.Section <> 62
-        AND plog.Event = 32
-    )
     SELECT
-      id,
-      tab_number,
-      full_name,
-      last_time,
-      mode
-    FROM
-      LatestEvents
-    WHERE
-      rn = 1
+    plog.HozOrgan [ИД],
+    employees.TabNumber [Табельный номер],
+    employees.Name + ' ' + employees.FirstName + ' ' + employees.MidName [Сотрудник],
+    MAX(plog.TimeVal) [Время],
+    plog.Mode [Направление]
+  FROM
+      [ORIONSERVER\SQLSERVER2012].[OrionNavigat].[dbo].[PLogData] as plog
+  LEFT JOIN
+    [ORIONSERVER\SQLSERVER2012].[OrionNavigat].[dbo].[PList] as employees
+    ON plog.HozOrgan = employees.ID
+  WHERE
+    plog.doorIndex  in (1, 2, 10, 14, 16, 18, 19, 20, 30, 31, 32, 34, 35, 36, 42, 45, 48, 49, 52)
+    AND plog.TimeVal > cast(GETDATE() as date)
+    AND plog.HozOrgan <> 0 AND employees.TabNumber <> ''
+    AND employees.Section <> 62
+    AND plog.Event = 32
+  GROUP BY
+    employees.TabNumber,
+    plog.HozOrgan,
+    employees.Name + ' ' + employees.FirstName + ' ' + employees.MidName
+    plog.mode
   `;
 
   const result = await conn.query(query);
+
+
 
   const payload = result.map(emp => ({
     id: emp.id,
