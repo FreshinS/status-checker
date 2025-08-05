@@ -10,7 +10,7 @@ let previousStatus = new Map();
 wss.on('connection', async (ws) => {
   console.log('Клиент подключился');
 
-  ws.send(await getEmployees())
+  ws.send({ type: 'initial_status', data: await getEmployees() })
 });
 
 async function pollAndBroadcast() {
