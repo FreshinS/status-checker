@@ -1,6 +1,6 @@
 require('dotenv').config();
 const WebSocket = require('ws');
-const { getEmployees } = require('./db');
+const { getEmployees, getLastSatus } = require('./db');
 
 const wss = new WebSocket.Server({ port: process.env.PORT || 3000 });
 console.log(`WebSocket сервер запущен на порту ${process.env.PORT}`);
@@ -10,7 +10,7 @@ let previousStatus = new Map();
 wss.on('connection', async (ws) => {
   console.log('Клиент подключился');
 
-  ws.send(JSON.stringify({ type: 'initial_status', data: await getEmployees() }))
+  ws.send(JSON.stringify({ type: 'initial_status', data: getLastSatus() }))
 });
 
 async function pollAndBroadcast() {

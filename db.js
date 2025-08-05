@@ -1,6 +1,7 @@
 require('dotenv').config();
 const odbc = require('odbc');
 
+let lastStatus;
 let pool;
 
 async function getConnection() {
@@ -48,14 +49,22 @@ async function getEmployees() {
 
   const result = await conn.query(query);
 
-  return result.map(emp => ({
+  const payload = result.map(emp => ({
     id: emp.id,
     tab_number: emp.tab_number,
     name: emp.full_name,
     is_present: emp.mode === 1,
     time: emp.last_time,
     mode: emp.mode
-  }));
+  }))
+
+  lastStatus = payload;
+
+  return payload;
 }
 
-module.exports = { getEmployees };
+function getLastSatus() {
+  return lastStatus;
+}
+
+module.exports = { getEmployees, getLastSatus };
