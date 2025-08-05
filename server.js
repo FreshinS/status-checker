@@ -7,8 +7,10 @@ console.log(`WebSocket сервер запущен на порту ${process.env
 
 let previousStatus = new Map();
 
-wss.on('connection', (ws) => {
+wss.on('connection', async (ws) => {
   console.log('Клиент подключился');
+
+  ws.send(await getEmployees())
 });
 
 async function pollAndBroadcast() {
@@ -39,16 +41,16 @@ async function pollAndBroadcast() {
 
       // рассылка
 
-      // const payload = JSON.stringify({
-      //   type: 'status_update',
-      //   data: changed
-      // });
+      const payload = JSON.stringify({
+        type: 'status_update',
+        data: changed
+      });
 
-      // wss.clients.forEach((client) => {
-      //   if (client.readyState === WebSocket.OPEN) {
-      //     client.send(payload);
-      //   }
-      // });
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(payload);
+        }
+      });
     }
   } catch (err) {
     console.error('Ошибка при опросе БД:', err);
