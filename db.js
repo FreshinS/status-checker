@@ -49,11 +49,11 @@ async function getEmployees() {
 
   const query = `
     SELECT
-    plog.HozOrgan [ИД],
-    employees.TabNumber [Табельный номер],
-    employees.Name + ' ' + employees.FirstName + ' ' + employees.MidName [Сотрудник],
-    MAX(plog.TimeVal) [Время],
-    plog.Mode [Направление]
+    plog.HozOrgan AS id,
+    employees.TabNumber AS tab_number,
+    employees.Name + ' ' + employees.FirstName + ' ' + employees.MidName AS full_name,
+    MAX(plog.TimeVal) AS last_time,
+    plog.Mode AS mode
   FROM
       [ORIONSERVER\SQLSERVER2012].[OrionNavigat].[dbo].[PLogData] as plog
   LEFT JOIN
