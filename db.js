@@ -77,17 +77,7 @@ async function getEmployees() {
   //   mode: emp.mode
   // }))
 
-  const filteredPayload = payload.map((emp) => {
-    if (filteredEmployeeIds.includes(emp.tab_number)) {
-      return {
-        ...emp,
-        is_present: false,
-        hide: true
-      }
-    } else {
-      return emp
-    }
-  })
+  const filteredPayload = payload.filter((emp) => !filteredEmployeeIds.includes(emp.tab_number))
 
   lastStatus = filteredPayload;
 
