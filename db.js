@@ -68,7 +68,7 @@ async function getEmployees() {
   GROUP BY
     employees.TabNumber,
     plog.HozOrgan,
-    employees.Name + ' ' + employees.FirstName + ' ' + employees.MidName
+    employees.Name + ' ' + employees.FirstName + ' ' + employees.MidName,
     plog.mode
   `;
 
