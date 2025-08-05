@@ -88,4 +88,4 @@ function getLastSatus() {
   return lastStatus;
 }
 
-module.exports = { getEmployees, getLastSatus };
+module.exports = { getEmployees, getLastSatus, filteredEmployeeIds };
