@@ -55,9 +55,9 @@ async function getEmployees() {
     MAX(plog.TimeVal) AS last_time,
     plog.Mode AS mode
   FROM
-      [ORIONSERVER\SQLSERVER2012].[OrionNavigat].[dbo].[PLogData] as plog
+      [ORIONSERVER\\SQLSERVER2012].[OrionNavigat].[dbo].[PLogData] as plog
   LEFT JOIN
-    [ORIONSERVER\SQLSERVER2012].[OrionNavigat].[dbo].[PList] as employees
+    [ORIONSERVER\\SQLSERVER2012].[OrionNavigat].[dbo].[PList] as employees
     ON plog.HozOrgan = employees.ID
   WHERE
     plog.doorIndex  in (1, 2, 10, 14, 16, 18, 19, 20, 30, 31, 32, 34, 35, 36, 42, 45, 48, 49, 52)
