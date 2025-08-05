@@ -74,16 +74,38 @@ async function getEmployees() {
 
   const result = await conn.query(query);
 
+  const grouped = {};
+  for (const row of result) {
+    if (!grouped[row.tab_number]) grouped[row.tab_number] = [];
+    grouped[row.tab_number].push(row);
+  }
 
+  const payload = Object.values(grouped).map((events) => {
+    const [last, prev] = events;
 
-  const payload = result.map(emp => ({
-    id: emp.id,
-    tab_number: emp.tab_number,
-    name: emp.full_name,
-    is_present: emp.mode === 1,
-    time: emp.last_time,
-    mode: emp.mode
-  }))
+    const is_present =
+      !prev || new Date(last.time) > new Date(prev.time)
+        ? last.mode === 1
+        : prev.mode === 1;
+
+    return {
+      id: last.id,
+      tab_number: last.tab_number,
+      name: last.full_name,
+      is_present,
+      time: last.time,
+      mode: last.mode,
+    };
+  });
+
+  // const payload = result.map(emp => ({
+  //   id: emp.id,
+  //   tab_number: emp.tab_number,
+  //   name: emp.full_name,
+  //   is_present: emp.mode === 1,
+  //   time: emp.last_time,
+  //   mode: emp.mode
+  // }))
 
   lastStatus = payload;
 
