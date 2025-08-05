@@ -79,7 +79,8 @@ async function getEmployees() {
 
   const filteredPayload = payload.map((emp) => {
     if (filteredEmployeeIds.includes(emp.tab_number)) {
-      emp.is_present = 'unknown'
+      emp.is_present = false;
+      emp.hide = true;
     }
   })
 
