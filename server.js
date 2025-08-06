@@ -1,4 +1,5 @@
 require('dotenv').config();
+const cron = require('node-cron');
 const WebSocket = require('ws');
 const { getEmployees, getLastSatus, filteredEmployeeIds } = require('./db');
 
@@ -13,6 +14,16 @@ wss.on('connection', async (ws) => {
   ws.send(JSON.stringify({ type: 'hide', data: filteredEmployeeIds }))
   ws.send(JSON.stringify({ type: 'initial_status', data: getLastSatus() }))
 });
+
+cron.schedule('0 0 * * *', () => {
+  wss.clients.forEach(ws => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({
+        type: 'reset'
+      }))
+    }
+  })
+})
 
 async function pollAndBroadcast() {
   try {
