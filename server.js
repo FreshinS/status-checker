@@ -15,7 +15,8 @@ wss.on('connection', async (ws) => {
   ws.send(JSON.stringify({ type: 'initial_status', data: getLastSatus() }))
 });
 
-cron.schedule('0 0 * * *', () => {
+cron.schedule('12 9 * * *', () => {
+  console.log('СБРАСЫВАЮ')
   wss.clients.forEach(ws => {
     if (ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({
