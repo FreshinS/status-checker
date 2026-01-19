@@ -40,7 +40,7 @@ async function getEmployees() {
 		LEFT JOIN [ORIONSERVER\\SQLSERVER2012].[OrionNavigat].[dbo].[ClientFieldsValues] as gid
 			ON gid.owner = plog.HozOrgan AND gid.field_id = 3
 	WHERE
-		plog.doorIndex  in (1, 2, 10, 14, 16, 18, 19, 20, 24, 30, 31, 32, 34, 35, 36, 42, 45, 48, 49, 52, 56)
+		plog.doorIndex  in (1, 2, 10, 14, 16, 18, 19, 20, 24, 30, 31, 32, 34, 35, 36, 42, 45, 48, 49, 52, 56, 58)
 		AND plog.TimeVal > cast(GETDATE() as date)
 		AND plog.HozOrgan <> 0 AND (gid.value is not NULL AND gid.value <> '')
 		AND employees.Section <> 62
